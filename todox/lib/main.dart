@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todox/route/routes.dart';
+import 'package:todox/bindings/bindings.dart';
+import 'package:todox/routes/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.fadeIn,
       getPages: Routes.pages,
+      initialBinding: MyBindings(),
     );
   }
 }
