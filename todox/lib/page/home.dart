@@ -2,13 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todox/constant/constant.dart';
 
+import '../main.dart';
+
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    MyApp.changeColor(kLightBlueColor, Brightness.light);
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          heroTag: 'floatingactionhero',
+          onPressed: () {
+            Get.toNamed('/add')!.then((value) => (value) {
+                  MyApp.changeColor(kLightBlueColor, Brightness.light);
+                });
+          },
           child: const Icon(Icons.add),
           backgroundColor: kLightBlueColor,
           elevation: 0.0,
