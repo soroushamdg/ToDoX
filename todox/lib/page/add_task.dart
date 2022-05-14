@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todox/constant/constant.dart';
+import 'package:todox/controller/textfield_controller.dart';
 import 'package:todox/model/task.dart';
 
 import '../controller/task_controller.dart';
@@ -42,12 +43,34 @@ class CreateButton extends StatelessWidget {
         style: TextButton.styleFrom(
             elevation: 0.0, backgroundColor: kLightBlueColor),
         onPressed: () {
-          Get.find<TaskController>()
-              .tasks
-              .add(TaskModel(title: 'title', subtitle: 'subtitle'));
-          Get.back();
+          if (Get.find<TaskController>().isEditing.value) {
+            Get.find<TaskController>()
+                    .tasks[Get.find<TaskController>().editIndex]
+                    .title =
+                Get.find<TextFieldController>().tasktitle_controller!.text;
+            Get.find<TaskController>()
+                    .tasks[Get.find<TaskController>().editIndex]
+                    .subtitle =
+                Get.find<TextFieldController>().tasksub_controller!.text;
+            Get.find<TextFieldController>().tasksub_controller!.clear();
+            Get.find<TextFieldController>().tasktitle_controller!.clear();
+            Get.back();
+          } else {
+            Get.find<TaskController>().tasks.add(TaskModel(
+                  title:
+                      Get.find<TextFieldController>().tasksub_controller!.text,
+                  subtitle: Get.find<TextFieldController>()
+                      .tasktitle_controller!
+                      .text,
+                ));
+
+            Get.find<TextFieldController>().tasksub_controller!.clear();
+            Get.find<TextFieldController>().tasktitle_controller!.clear();
+            Get.back();
+          }
         },
-        child: Text('Create'),
+        child: Text(
+            Get.find<TaskController>().isEditing.value ? 'Edit' : 'Create'),
       ),
     );
   }
@@ -61,6 +84,7 @@ class NoteWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
       child: TextField(
+        controller: Get.find<TextFieldController>().tasksub_controller,
         maxLength: 30,
         cursorColor: kLightBlueColor,
         decoration: InputDecoration(
@@ -85,6 +109,7 @@ class TaskTextField extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.0),
       child: TextField(
+        controller: Get.find<TextFieldController>().tasktitle_controller,
         maxLines: 6,
         cursorColor: kLightBlueColor,
         cursorHeight: 40.0,
@@ -130,7 +155,9 @@ class AddTaskAppBar extends StatelessWidget {
             child: Container(
           margin: EdgeInsets.only(left: 45),
           child: Text(
-            'New Task',
+            Get.find<TaskController>().isEditing.value
+                ? 'Edit Task'
+                : 'New Task',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 21.0),
           ),

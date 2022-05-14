@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todox/constant/constant.dart';
 import 'package:todox/controller/task_controller.dart';
+import 'package:todox/controller/textfield_controller.dart';
 
 import '../main.dart';
 
@@ -14,6 +15,10 @@ class HomeScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           heroTag: 'floatingactionhero',
           onPressed: () {
+            Get.find<TextFieldController>().tasksub_controller!.clear();
+            Get.find<TextFieldController>().tasktitle_controller!.clear();
+            Get.find<TaskController>().isEditing.value = false;
+
             Get.toNamed('/add')!.then((value) => (value) {
                   MyApp.changeColor(kLightBlueColor, Brightness.light);
                 });
@@ -130,7 +135,34 @@ class BottomSectionContainer extends StatelessWidget {
                   title: Text(Get.find<TaskController>().tasks[index].title),
                   subtitle:
                       Text(Get.find<TaskController>().tasks[index].subtitle),
-                  onTap: () {},
+                  onTap: () {
+                    Get.find<TextFieldController>().tasktitle_controller!.text =
+                        Get.find<TaskController>().tasks[index].title;
+                    Get.find<TextFieldController>().tasksub_controller!.text =
+                        Get.find<TaskController>().tasks[index].subtitle;
+                    Get.find<TaskController>().isEditing.value = true;
+                    Get.find<TaskController>().editIndex = index;
+                    Get.toNamed(
+                      '/add',
+                    );
+                  },
+                  onLongPress: () {
+                    Get.defaultDialog(
+                        title: 'Delete?',
+                        middleText: 'Delete this item?',
+                        textConfirm: 'Delete',
+                        confirmTextColor: Colors.redAccent,
+                        buttonColor: Colors.white,
+                        onConfirm: () {
+                          Get.find<TaskController>().tasks.removeAt(index);
+                          Get.back();
+                        },
+                        textCancel: 'No!',
+                        cancelTextColor: kLightBlueColor,
+                        onCancel: () {
+                          Get.back();
+                        });
+                  },
                   trailing: Checkbox(
                     activeColor: kLightBlueColor,
                     side: BorderSide(
@@ -139,7 +171,11 @@ class BottomSectionContainer extends StatelessWidget {
                     ),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0)),
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      var task = Get.find<TaskController>().tasks[index];
+                      task.status = !task.status;
+                      Get.find<TaskController>().tasks[index] = task;
+                    },
                     value: Get.find<TaskController>().tasks[index].status,
                   ),
                 );
