@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todox/bindings/bindings.dart';
@@ -15,10 +16,15 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       theme: ThemeData(textTheme: GoogleFonts.montserratTextTheme()),
       debugShowCheckedModeBanner: false,
-      defaultTransition: Transition.fadeIn,
+      defaultTransition: Transition.circularReveal,
       getPages: Routes.pages,
       initialRoute: '/home',
       initialBinding: MyBindings(),
     );
+  }
+
+  static void changeColor(Color color, Brightness brightness) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: color, statusBarIconBrightness: brightness));
   }
 }
