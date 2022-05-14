@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todox/constant/constant.dart';
+import 'package:todox/controller/task_controller.dart';
 
 import '../main.dart';
 
@@ -89,11 +90,13 @@ class TopSectionContainer extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.only(left: 50.0, top: 5.0),
-            child: const Text(
-              '23 Tasks',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
+            child: Obx(
+              () => Text(
+                '${Get.find<TaskController>().tasks.length} Tasks',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.0,
+                ),
               ),
             ),
           ),
@@ -120,30 +123,33 @@ class BottomSectionContainer extends StatelessWidget {
       ),
       child: Container(
         margin: EdgeInsets.only(left: 50, top: 20, right: 10),
-        child: ListView.separated(
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('title'),
-                subtitle: Text('subtitle'),
-                onTap: () {},
-                trailing: Checkbox(
-                  activeColor: kLightBlueColor,
-                  side: BorderSide(
-                    color: Colors.grey,
-                    width: 1.5,
+        child: Obx(
+          () => ListView.separated(
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(Get.find<TaskController>().tasks[index].title),
+                  subtitle:
+                      Text(Get.find<TaskController>().tasks[index].subtitle),
+                  onTap: () {},
+                  trailing: Checkbox(
+                    activeColor: kLightBlueColor,
+                    side: BorderSide(
+                      color: Colors.grey,
+                      width: 1.5,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
+                    onChanged: (value) {},
+                    value: Get.find<TaskController>().tasks[index].status,
                   ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0)),
-                  onChanged: (value) {},
-                  value: true,
-                ),
-              );
-            },
-            separatorBuilder: (context, index) => Divider(
-                  color: kLightBlueColor,
-                  height: 1,
-                ),
-            itemCount: 5),
+                );
+              },
+              separatorBuilder: (context, index) => Divider(
+                    color: kLightBlueColor,
+                    height: 1,
+                  ),
+              itemCount: Get.find<TaskController>().tasks.length),
+        ),
       ),
     );
   }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todox/constant/constant.dart';
+import 'package:todox/model/task.dart';
 
+import '../controller/task_controller.dart';
 import '../main.dart';
 
 class AddTaskScreen extends StatelessWidget {
@@ -39,7 +41,12 @@ class CreateButton extends StatelessWidget {
       child: ElevatedButton(
         style: TextButton.styleFrom(
             elevation: 0.0, backgroundColor: kLightBlueColor),
-        onPressed: () {},
+        onPressed: () {
+          Get.find<TaskController>()
+              .tasks
+              .add(TaskModel(title: 'title', subtitle: 'subtitle'));
+          Get.back();
+        },
         child: Text('Create'),
       ),
     );
